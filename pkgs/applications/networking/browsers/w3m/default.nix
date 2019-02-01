@@ -4,6 +4,7 @@
 , graphicsSupport ? true, imlib2 ? null
 , x11Support ? graphicsSupport, libX11 ? null
 , mouseSupport ? !stdenv.isDarwin, gpm-ncurses ? null
+, gopherSupport ? false
 , perl, man, pkgconfig, buildPackages, w3m
 }:
 
@@ -76,7 +77,8 @@ in stdenv.mkDerivation rec {
     ++ optionals (stdenv.buildPlatform != stdenv.hostPlatform) [
       "ac_cv_func_setpgrp_void=yes"
     ]
-    ++ optional graphicsSupport "--enable-image=${optionalString x11Support "x11,"}fb";
+    ++ optional graphicsSupport "--enable-image=${optionalString x11Support "x11,"}fb"
+    ++ optional gopherSupport "--enable-gopher";
 
   preConfigure = ''
     substituteInPlace ./configure --replace "/lib /usr/lib /usr/local/lib /usr/ucblib /usr/ccslib /usr/ccs/lib /lib64 /usr/lib64" /no-such-path
